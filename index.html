@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        .container{
+            width: 700px;
+            margin:0 auto;
+            border:2px solid black;
+            background-color: #333;
+            color:whitesmoke;
+            padding:5px;
+        }
+        
+        #tb{
+            margin: 50px 20px 15px;
+        }
+        #tb,
+        tr,
+        td {
+            border: 1px solid black;
+            border-collapse: collapse;
+            padding: 8px;
+            
+        }
+
+        #takeinput {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <label for="">Enter rows</label>
+        <input type="number" id="row">
+        <label for="">Enter columns</label>
+        <input type="number" id="col">
+
+        <button onclick="handleClick()">Click</button>
+        <div id="grid">
+
+            <table id="tb">
+
+            </table>
+        </div>
+    </div>
+    <script>
+        function handleClick() {
+            let rows = document.getElementById("row").value
+            let columns = document.getElementById("col").value
+            let totalAlphabets = Number(rows) * Number(columns)
+
+            let k = 0
+            let arr = new Array(Number(rows))
+            console.log(totalAlphabets)
+            let takeinput = document.createElement('div')
+            takeinput.id = "takeinput"
+
+            let label = document.createElement('label')
+            label.innerHTML = `Enter ${totalAlphabets} alphabets `
+
+            let input = document.createElement("input")
+            let grid = document.getElementById("grid")
+
+
+
+            let btn = document.createElement('button')
+            btn.innerHTML = "Display grid"
+
+            takeinput.append(label)
+            takeinput.append(input)
+            takeinput.append(btn)
+            grid.prepend(takeinput)
+
+            btn.addEventListener('click', function () {
+                let text = input.value
+                displayGrid(text)
+            })
+            function displayGrid(enteredAlphabets) {
+                let gridStr = ""
+                for (let i = 0; i < rows; i++) {
+                    arr[i] = new Array(Number(columns))
+                    gridStr += `<tr id=${i}>`
+                    for (let j = 0; j < columns; j++) {
+
+                        if (k < enteredAlphabets.length)
+                            arr[i][j] = enteredAlphabets[k]
+
+                        gridStr += `<td id=${arr[i][j]}>${arr[i][j]}</td>`
+
+                        k++
+                    }
+                    document.getElementById('tb').innerHTML = gridStr
+                }
+
+                searchGrid()
+            }
+
+            function searchGrid() {
+                let searchInput = document.createElement('input')
+
+
+                let searchBtn = document.createElement("button")
+                let grid = document.getElementById("grid")
+                grid.append(searchInput)
+                grid.append(searchBtn)
+                searchBtn.innerHTML = "Search"
+                searchBtn.addEventListener('click', function () {
+                    let searchStr = searchInput.value
+                    let searchstring = [...searchStr]
+                    console.log(searchstring)
+                    let result
+                    for (let l = 0; l < Number(rows); l++) {
+
+                        for (let m = 0; m < Number(columns); m++) {
+                            if (diagonal(arr, searchstring, l, m) || leftToRight(arr, searchstring, l, m)) {
+                                console.log("Present")
+                            }
+                        }
+                    }
+
+
+                })
+
+            }
+
+
+
+
+            function diagonal(arr, searchstring, l, m) {
+                if (arr[l][m] !== searchstring[0]) {
+                    return false
+                } else {
+
+                    document.getElementById(arr[l][m]).style.backgroundColor = "white"
+                    document.getElementById(arr[l][m]).style.color="black"
+                    console.log(l, m)
+                }
+                let s = 0
+                m = m + 1
+                l = l + 1
+                for (s = 1; s < searchstring.length; s++) {
+
+                    if (arr[l][m] == searchstring[s]) {
+                        console.log(l, m)
+                        let x = document.getElementById(l)
+                        let y = x.children
+                        for (item of y) {
+                            if (arr[l][m] == item.getAttribute("id"))
+                                item.style.backgroundColor = "white"
+                                item.style.color="black"
+                        }
+                        m++
+                        l++
+                    } else {
+                        break;
+                    }
+                }
+
+                if (s === searchstring.length) {
+
+                    return true
+
+                }
+
+                return false
+
+            }
+
+
+            function leftToRight(arr, searchstring, l, m) {
+                if (arr[l][m] !== searchstring[0]) {
+                    return false
+                } else {
+
+                    document.getElementById(arr[l][m]).style.backgroundColor = "white"
+                    document.getElementById(arr[l][m]).style.color = "black"
+                    console.log(l, m)
+                }
+                let s = 0
+                m = m + 1
+
+                for (s = 1; s < searchstring.length; s++) {
+
+                    if (arr[l][m] == searchstring[s]) {
+                        console.log(l, m)
+                        let x = document.getElementById(l)
+                        let y = x.children
+                        for (item of y) {
+                            if (arr[l][m] == item.getAttribute("id"))
+                                item.style.backgroundColor = "white"
+                                item.style.color="black"
+                        }
+                        m++
+
+                    } else {
+                        break;
+                    }
+                }
+
+                if (s === searchstring.length) {
+
+                    return true
+
+                }
+
+                return false
+
+            }
+
+
+
+
+        }
+    </script>
+</body>
+
+</html>
